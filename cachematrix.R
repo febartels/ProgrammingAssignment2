@@ -1,34 +1,44 @@
-## Put comments here that give an overall description of what your
-## functions do
-
-## Write a short comment describing this function
-
 makeCacheMatrix <- function(x = matrix()) {
-  inv <- NULL
-  set <- function(y){
+  i <- NULL
+  set <- function(y) {
     x <<- y
-    inv <<- NULL
+    i <<- NULL
   }
-  get <- function()x
-  setInverse <- function() inv <<- solve(x) #computes inverse
-  getInverse <- function() inv
+  
+  ## this function has 4 items set, get, setinverse and getinverse.
+  ##set gives the value of the matrix, get returns the value of the matrix, 
+  ##setinverse gives the value of the matrix and getinverse gives the value of
+  ##the inverse of the matrix
+  get <- function() x
+  setinverse <- function(inverse) i <<- inverse
+  getinverse <- function() i
   list(set = set,
        get = get,
-       setInverse = setInverse,
-       getInverse = getInverse)
+       setinverse = setinverse,
+       getinverse = getinverse)
 }
 
 
-## Write a short comment describing this function
 
-##cacheSolve <- function(x, ...) {
-## Return a matrix that is the inverse of 'x'
-##}
 
-funs <- makeCacheMatrix()
-funs$set(matrix(1:4, 2))
-funs$get()
+## returns it
+## OR 
+## compute the inverse and store it in the cache
+cacheSolve <- function(x, ...) {
+  i <- x$getinverse()
+  if (!is.null(i)) {
+    message("getting cached data")
+    return(i)
+  }
+  data <- x$get()
+  i <- solve(data, ...)
+  x$setinverse(i)
+  i
+}
 
-funs$setInverse()
-funs$getInverse()
+B <- matrix(c(1,2,3,4),2,2)
+#solve(B) #We pretend that this cant't happen xD
+
+B1 <- makeCacheMatrix(B)
+cacheSolve(B1) #inverse returned after computation
 
